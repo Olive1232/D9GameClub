@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>D9游研社首页</title>
+    <!-- 浏览器标签页图标(favicon) -->
+    <link rel="icon" type="image/png+xml" href="favicon.png" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --nav-h: 80px; /* 导航栏高度，随意调 */
+      }
+
+      /* 顶部导航栏 */
+      .top-nav {
+        position: sticky; /* 滚动时固定在顶部 */
+        top: 0;
+        z-index: 1000;
+        background-color: #2f303b;
+
+        /* 把高度固定下来 */
+        display: flex;
+        align-items: center;
+        /* nav 变成 flex 子项后只占内容宽度、会跑到左边，
+           这里让它居中；右侧的欢迎文字用绝对定位，不参与这个居中。 */
+        justify-content: center;
+        min-height: var(--nav-h);
+      }
+
+      .top-nav nav {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        padding: 0 20px; /* ← 上下内边距交给 min-height 管，这里改成 0 */
+      }
+
+      .top-nav a {
+        /* 左右留出内边距，选中时背景才不会紧贴文字 */
+        padding: 8px 12px;
+        border-radius: 8px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        /* 默认背景写成“同一个米黄、但透明度为 0”，而不是 transparent，
+           这样万一以后加过渡，颜色也不会先变暗再淡出。 */
+        background-color: rgba(240, 245, 185, 0);
+
+        /* ⚠️ 这里刻意不加 transition（切换是瞬时的）。
+           因为“未选中 = 深底白字”和“选中 = 米黄底深字”是一对互逆的配色，
+           一旦做渐变，中间会经过“灰字压灰底”的低对比瞬间，
+           文字看起来就像闪了一下、短暂消失。
+           想让高亮有渐变动画的话，得把选中改成“深底 + 浅字”的同类配色。 */
+      }
+
+      /* 悬停变米黄；已选中的那一项除外，否则黄字压黄底会看不清 */
+      .top-nav a:hover:not(.active) {
+        color: rgba(240, 245, 185, 1);
+      }
+
+      /* 当前所在的栏目：文字背后铺一层高亮背景，表示“被选中” */
+      .top-nav a.active {
+        color: #16171d;
+        background-color: rgba(240, 245, 185, 1);
+      }
+
+      /* 导航栏最右边的欢迎文字 */
+      .nav-welcome {
+        /* 绝对定位：浮在右边缘，不去挤中间那 4 个链接（否则整组会偏左） */
+        position: absolute;
+        right: 24px; /* 离右边缘的距离，可调 */
+        top: 50%;
+        transform: translateY(-50%); /* 垂直居中 */
+        color: rgba(240, 245, 185, 0.9); /* 沿用米黄，稍淡一点不抢眼 */
+        font-size: 14px;
+        white-space: nowrap; /* 别让文字折成两行 */
+        user-select: none; /* 防止拖动页面时被误选中 */
+      }
+
+      /* 汉堡菜单按钮：电脑端默认隐藏，只在手机端显示 */
+      .nav-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      /* 三条白色横线 */
+      .nav-toggle .bar {
+        display: block;
+        width: 24px;
+        height: 2px;
+        margin: 0 auto;
+        background-color: #fff;
+        border-radius: 2px;
+        transition:
+          transform 0.3s,
+          opacity 0.3s;
+      }
+
+      /* 页面内容区域，方便演示跳转 */
+      section {
+        min-height: 100vh;
+        padding: 80px 20px;
+        /* 导航栏是吸顶的，点导航跳转时让它别压住标题 */
+        scroll-margin-top: var(--nav-h);
+      }
+
+      /* ===== 手机端适配（屏幕宽度小于 768px 时生效） ===== */
+      @media (max-width: 768px) {
+        .top-nav {
+          /* 让按钮靠右显示 */
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          padding: 10px 16px;
+        }
+
+        /* 手机端才显示汉堡按钮 */
+        .nav-toggle {
+          display: flex;
+        }
+
+        /* 手机上右边是汉堡按钮，欢迎文字挪到左边、字号缩小，避免叠在一起 */
+        .nav-welcome {
+          right: auto;
+          left: 16px;
+          font-size: 12px;
+          letter-spacing: 0.02em;
+        }
+
+        /* 点开后三条线变成 X */
+        .top-nav.open .bar:nth-child(1) {
+          transform: translateY(7px) rotate(45deg);
+        }
+        .top-nav.open .bar:nth-child(2) {
+          opacity: 0;
+        }
+        .top-nav.open .bar:nth-child(3) {
+          transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* 菜单改为竖排下拉，默认收起 */
+        .top-nav nav {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          flex-direction: column;
+          gap: 0;
+          padding: 0;
+          background-color: #2f303b;
+          overflow: hidden;
+          max-height: 0; /* 收起状态 */
+          transition: max-height 0.3s ease;
+        }
+
+        /* 点开后展开 */
+        .top-nav.open nav {
+          max-height: 320px;
+        }
+
+        .top-nav a {
+          padding: 14px 20px;
+          /* 竖排菜单里高亮铺满整行，所以不要圆角 */
+          border-radius: 0;
+          text-align: center;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 网页上方的一栏 -->
+    <header class="top-nav">
+      <!-- 手机端显示的菜单按钮 -->
+      <button
+        class="nav-toggle"
+        aria-label="打开导航菜单"
+        aria-expanded="false"
+      >
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      <nav>
+        <a href="#home">首页</a>
+        <a href="#about">社团简介</a>
+        <a href="#services">近期活动</a>
+        <a href="#games">游戏作品展示</a>
+      </nav>
+      <!-- 导航栏最右边的欢迎文字（用 span 而不是 a，避免被链接样式影响） -->
+      <span class="nav-welcome">Welcome To D9游研！！！</span>
+    </header>
+
+    <!-- 页面内容 -->
+    <main>
+      <section id="home">
+        <h1>首页</h1>
+        <p>这里是首页内容。</p>
+      </section>
+
+      <section id="about">
+        <h1>社团简介</h1>
+        <p>这里是社团简介</p>
+      </section>
+
+      <section id="services">
+        <h1>近期活动</h1>
+        <p>这里是近期活动</p>
+      </section>
+      <section id="games">
+        <h1>游戏作品展示</h1>
+        <p>游戏作品展示</p>
+      </section>
+    </main>
+
+    <script>
+      const topNav = document.querySelector(".top-nav");
+      const navToggle = document.querySelector(".nav-toggle");
+
+      // 点击按钮：切换菜单的展开/收起
+      navToggle.addEventListener("click", () => {
+        const isOpen = topNav.classList.toggle("open");
+        // 同步无障碍属性，让读屏软件知道菜单是开还是关
+        navToggle.setAttribute("aria-expanded", isOpen);
+      });
+
+      // 点击任意导航链接后，自动收起菜单
+      document.querySelectorAll(".top-nav a").forEach((link) => {
+        link.addEventListener("click", () => {
+          topNav.classList.remove("open");
+          navToggle.setAttribute("aria-expanded", "false");
+        });
+      });
+
+      // ===== 当前所在的栏目：给对应链接加上“被选中”的高亮 =====
+      const navLinks = Array.from(document.querySelectorAll(".top-nav a"));
+      const sections = Array.from(
+        document.querySelectorAll("main section[id]"),
+      );
+
+      // 点亮某一个栏目（id 为栏目名，例如 "home"）
+      function setActiveLink(id) {
+        navLinks.forEach((link) => {
+          const isCurrent = link.getAttribute("href") === `#${id}`;
+          link.classList.toggle("active", isCurrent);
+          // 同步无障碍属性，让读屏软件知道这是当前栏目
+          if (isCurrent) {
+            link.setAttribute("aria-current", "true");
+          } else {
+            link.removeAttribute("aria-current");
+          }
+        });
+      }
+
+      // 页面刚打开时：如果是通过带锚点的网址进来的（例如 index.html#services），
+      // 就点亮对应的栏目；否则默认停在首页，点亮“首页”。
+      const initialId = window.location.hash.slice(1);
+      const hasInitialSection = sections.some((el) => el.id === initialId);
+      setActiveLink(hasInitialSection ? initialId : "home");
+
+      // 点击某一项时立刻把它点亮（不用等观察器回调，反应更快）
+      let navLockUntil = 0; // 锁定的截止时刻
+      navLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          setActiveLink(link.getAttribute("href").slice(1));
+          // 跳转时，观察器手上可能还压着一份“跳转前”的旧结果，
+          // 它晚一步执行就会把刚点亮的那项又改回去，来回一折腾就成了闪烁。
+          // 所以点击后短暂“静音”观察器，让结果稳定下来再交还控制权。
+          navLockUntil = Date.now() + 600;
+        });
+      });
+
+      if ("IntersectionObserver" in window) {
+        const navObserver = new IntersectionObserver(
+          (entries) => {
+            // 刚点击过导航，先忽略观察器的结果
+            if (Date.now() < navLockUntil) return;
+
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              setActiveLink(entry.target.id);
+            });
+          },
+          // 只把“视口中部那条线”所在的板块算作当前栏目，
+          // 这样同一时刻只会有一项高亮。
+          { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
+        );
+
+        sections.forEach((sectionEl) => navObserver.observe(sectionEl));
+      }
+    </script>
+  </body>
+</html>
