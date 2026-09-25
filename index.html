@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>D9游研社首页</title>
+    <title>D9游研社,Welcome!</title>
     <!-- 浏览器标签页图标(favicon) -->
-    <link rel="icon" type="image/png+xml" href="favicon.png" />
+    <link rel="icon" type="image/png" href="favicon.png" />
     <style>
       * {
         margin: 0;
@@ -117,8 +117,19 @@
         scroll-margin-top: var(--nav-h);
       }
 
-      /* ===== 手机端适配（屏幕宽度小于 768px 时生效） ===== */
-      @media (max-width: 768px) {
+      /* ===== 手机端适配（屏幕宽度小于 900px 时生效） =====
+         断点为什么是 900px 而不是 768px：
+         桌面端导航是整组居中的，右边的欢迎文字则是绝对定位、脱离了文档流，
+         两者互不知情、不会互相避让，所以窗口不够宽时它们会直接叠在一起。
+         算一下：4 个链接的文字都是中文（全角，1 个字正好 = 1em = 16px），
+         共 16 个字 = 256px，加上每项 12px×2 的内边距 = 96px、
+         3 个 24px 的 gap = 72px、nav 自身 20px×2 的内边距 = 40px，
+         整组宽 464px，居中后左右各占 232px。
+         欢迎文字约 155~175px，再加它离右边缘的 24px，
+         要不重叠就要求：视口宽 ÷ 2 ≥ 232 + 24 + 175，即视口宽 ≥ 862px。
+         768px（正好是 iPad 竖屏）落在这个重叠区间里，所以把断点提到 900px，
+         留约 40px 余量，让这一档宽度改用汉堡菜单。 */
+      @media (max-width: 900px) {
         .top-nav {
           /* 让按钮靠右显示 */
           display: flex;
@@ -213,7 +224,12 @@
 
       <section id="about">
         <h1>社团简介</h1>
-        <p>这里是社团简介</p>
+        <p>
+          D9游研社社团简介！！
+          D9是一个游戏开发社团，主要活动为游戏开发相关知识分享，gamejam组队与业余小游戏制作！<br /><br />
+          我们欢迎所有0基础的同学来与我们一同学习或玩耍，我们会不定期组团参加展会，与外校社团共同活动（待定）并且提供给新人一个小比赛去熟悉游戏开发流程！
+          另外，本社团为兴趣社团，没有任何硬性指标或者要求；欢迎所有感兴趣的同学加入我们！
+        </p>
       </section>
 
       <section id="services">
