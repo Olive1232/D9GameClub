@@ -109,12 +109,347 @@
           opacity 0.3s;
       }
 
-      /* 页面内容区域，方便演示跳转 */
-      section {
+      /* 页面里的各个栏目（首页 / 社团简介 / 近期活动 / 游戏作品展示）。
+         ⚠️ 这里刻意写成 main > section 而不是光写 section：
+         「社团简介」内部还嵌了一个 <section class="club-intro"> 当文字容器，
+         如果写成裸的 section，这个内层容器也会被套上 100vh 最小高度和 80px 内边距，
+         结果内容被硬撑开、左侧还多缩进 20px，整块排版都会错位。
+         只选 main 的直接子栏目，就只作用在真正的四个栏目上。 */
+      main > section {
         min-height: 100vh;
         padding: 80px 20px;
         /* 导航栏是吸顶的，点导航跳转时让它别压住标题 */
         scroll-margin-top: var(--nav-h);
+      }
+
+      /* 首页：整张欢迎图取代原来的文字内容 */
+      #home {
+        /* 清掉 padding：不然图片左右会各空出 20px，铺不满整屏宽度。
+           上下内边距也一并去掉，让图片紧贴导航栏。 */
+        padding: 0;
+      }
+
+      /* 首页顶部的 Welcome 标题 */
+      #home .home-title {
+        /* h1 是块级元素、本来就占满整行，所以直接让行内文字居中就行 */
+        text-align: center;
+        /* #home 的 padding 被清成了 0，标题会紧贴导航栏，
+           这里自己留出上下间距（下边距稍小，好和下方的图片靠近一点） */
+        padding: 48px 20px 24px;
+        color: #2f303b; /* 沿用导航栏的深色，小白底上才看得清 */
+        font-size: 40px;
+        letter-spacing: 0.08em; /* 字距拉开一点，标题更舒展 */
+      }
+
+      /* 首页的欢迎图 */
+      #home .home-banner {
+        display: block; /* 去掉 img 默认的行内基线缝隙（否则底部会多几像素空白） */
+        width: 70%; /* 想要的宽度比例，改这里就能放大/缩小 */
+        height: auto; /* 高度按原图比例自动撑开，图片不会被拉变形 */
+        /* 宽度小于 100% 时，图片默认会靠左；
+           左右外边距都设成 auto，剩余的空白就被平均分到两边，图片因此水平居中 */
+        margin: 0 auto;
+      }
+
+      /* ===== 社团简介（#about）：以长文为主，排版目标是「好读」 =====
+         注意：页面上方的 * 选择器把 h1/h2/p/ul 的默认外边距全清成了 0，
+         那是为了让首页图片和卡片行不留缝；但正文段落如果也顶着 0 间距，
+         标题、段落、列表条目就会挤成一整块糊在一起。
+         所以下面得把这些间距一条条补回来（这是全局重置的必要代价）。 */
+
+      /* 各栏目的主标题统一居中。
+         首页的 Welcome 标题本来就居中，这里把它一起覆盖一致。
+         之所以要统一：社团简介的正文是一栏居中的窄栏（见下面的 .club-intro），
+         如果只有它的标题居中、别的栏目左对齐，页面上下滚动时会前后不一致。 */
+      main > section > h1 {
+        text-align: center;
+      }
+
+      .club-intro {
+        /* 正文的基础字号。中文正文用 18px 看着最省力，
+           16px 在大屏上会偏小、要凑近才看得清。
+           整块的字号都从这一行往下继承（p / li / 小标题都基于它），
+           所以以后想整体放大缩小，只改这个数字就够了。 */
+        font-size: 18px;
+        /* 一行放多少字直接决定好不好读：中文没有词间空格、全靠字形辨认，
+           一行太长（铺满整屏就是 80 多字）眼睛换行时很难找回下一行的开头。
+           30~45 字/行最舒服。
+           ⚠️ 这里的 em 是相对上面那行 font-size 算的，不是浏览器的 16px，
+           所以 40em 始终等于「40 个汉字宽」——字号调大，栏宽会一起变宽，
+           每行的字数保持不变（这正是用 em 而不是 px 的目的）。 */
+        max-width: 40em;
+        /* 左右 auto → 整栏在页面里水平居中、两边留白对称；
+           上边距把正文和最上面的「社团简介」标题拉开 */
+        margin: 36px auto 0;
+      }
+
+      .club-intro h2 {
+        color: #2f303b;
+        font-size: 26px;
+        margin-bottom: 16px;
+      }
+
+      .club-intro p,
+      .club-intro li {
+        color: #3a3d47; /* 正文比标题浅一档，不跟标题抢注意力 */
+        /* 1em = 跟随 .club-intro 上设的基准字号（18px），
+           不在每处重复写死像素值，以后调字号只改一处 */
+        font-size: 1em;
+        /* 中文行高 1.7~1.8 最舒服；浏览器默认的 normal（约 1.2）是配英文设计的，
+           中文笔画密、行距太小会糊成一片，眼睛容易串行。
+           用倍数而不是像素，字号怎么变行距都跟着保持同样比例 */
+        line-height: 1.8;
+      }
+
+      .club-intro p {
+        /* 段落之间空出一行，读完一段有个自然停顿 */
+        margin-bottom: 1em;
+      }
+
+      .club-intro h3 {
+        color: #2f303b;
+        font-size: 21px;
+        /* 这个标题是「上面的引言」和「下面的活动列表」之间的分界。
+           上边距刻意比下边距大得多：距离远近会暗示归属关系，
+           离下面更近，才会被读成下面那组的标题，而不是上一段的尾巴。 */
+        margin-top: 40px;
+        margin-bottom: 14px;
+      }
+
+      .club-intro ul {
+        /* 不用浏览器默认的小圆点：它的位置由 ul 的内边距决定，
+           而全局重置把内边距清成了 0，圆点会跑到内容框外面、
+           和正文的缩进关系错乱。改成自己画（见下面的 ::before）。 */
+        list-style: none;
+        /* 列表和它后面那段正文之间必须留白，而且要明显大于条目之间的 14px，
+           否则结尾那段会被看成「第 6 个条目」。
+           注意这个间距只能写在 ul 上：段落的间距是写在 p 自己的
+           margin-bottom 上的，而列表后面那个 p 的 margin-top 是 0，
+           光靠段落自己是撑不开这个空隙的。 */
+        margin-bottom: 1.5em;
+      }
+
+      .club-intro li {
+        position: relative; /* 给下面绝对定位的小圆点当参照 */
+        /* 给圆点留出一列位置，正文整体右移；
+           这样条目换行时第二行也会对齐，不会顶到圆点下面 */
+        padding-left: 20px;
+        margin-bottom: 14px;
+      }
+
+      .club-intro li:last-child {
+        /* 最后一个条目下面紧跟着新段落，它自己就不要再留一段，
+           否则两个间距叠在一起，那里会空得莫名其妙 */
+        margin-bottom: 0;
+      }
+
+      .club-intro li::before {
+        content: "";
+        position: absolute;
+        left: 2px;
+        /* 用 em 定位，字号一改圆点自动跟着走，永远落在第一行的视觉中线上
+           （行高 1.8，字面中心约在 0.72em 处） */
+        top: 0.72em;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: #c3cf4e; /* 社团的抹茶绿，拿来做项目符号 */
+      }
+
+      .club-intro li strong {
+        color: #2f303b; /* 每条开头的「小标题」加深，5 个条目一眼能扫到 */
+      }
+
+      /* 结尾那句口号单独提一下，让整段有个收尾 */
+      .club-intro p:last-child {
+        margin-top: 32px; /* 和上面拉开，别黏在上一段后面 */
+        margin-bottom: 0;
+        text-align: center; /* 短句居中，当结束语 */
+      }
+
+      .club-intro p:last-child strong {
+        color: #2f303b;
+        font-size: 20px;
+        letter-spacing: 0.04em;
+      }
+
+      /* ===== 卡片行：「近期活动」和「游戏作品展示」共用的一套样式 =====
+         两个板块结构完全一样（4 个格子 + 右侧“更多”箭头），
+         所以样式只写一份、用通用类名，两边一起套用，
+         以后想同时改两个板块的外观，改这里就够了。 */
+
+      /* 4 个格子和箭头同处一行；用 flex 是因为箭头要单独贴在右边 */
+      .card-row {
+        display: flex;
+        /* 让箭头跟着格子一起拉伸到同样高度，看起来才像一整排控件 */
+        align-items: stretch;
+        gap: 20px;
+        /* 宽屏上的上限。列宽是「(整行宽 − 箭头 − 各段间距) ÷ 4」，
+           所以这个值直接决定格子多大；太小的话大屏上两边会空一大片、格子显小 */
+        max-width: 1600px;
+        /* 上和标题拉开距离；左右 auto 让整行在页面里水平居中 */
+        margin: 40px auto 0;
+      }
+
+      /* 4 个格子的容器 */
+      .card-list {
+        list-style: none; /* 去掉 ul 默认的小圆点 */
+        /* 横向 4 格：repeat(4, 1fr) = 平均分成 4 列，
+           1fr 的列宽会跟着窗口一起伸缩，所以是自适应的 4 等分 */
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        flex: 1; /* 吃掉除箭头以外的全部宽度，箭头就被挤到最右边 */
+        min-width: 0; /* 允许列被压缩，否则内容会把整行撑破、挤走箭头 */
+      }
+
+      /* 单个格子（一张活动 / 一个游戏作品） */
+      .card {
+        background-color: #f4f5f7;
+        border-radius: 12px;
+        padding: 12px;
+      }
+
+      .card .card-title {
+        margin-bottom: 10px;
+        color: #2f303b; /* 沿用导航栏的深色 */
+        font-size: 16px;
+        text-align: center;
+      }
+
+      .card .card-thumb {
+        display: block;
+        width: 100%;
+        /* 先按 1:1 把位置的形状定下来（现有图片都是正方形）：
+           图还没加载出来时格子也不会塌成一条线，整页版面不会跳 */
+        aspect-ratio: 1 / 1;
+        object-fit: cover; /* 以后换成非正方形的图时裁掉多余部分，不拉伸变形 */
+        border-radius: 8px;
+        background-color: #dcdfe6; /* 图没加载出来时留一块浅灰占位 */
+        transition: filter 0.2s; /* 让下面的悬浮压暗有个过渡，不要生硬地跳 */
+      }
+
+      /* 图片外面的链接层：整张图都能点。
+         用 display: block 让 <a> 的表现和原来的 <img> 一致，
+         格子里的排版完全不变（<a> 默认是行内元素，会多出基线缝隙）。 */
+      .card .card-link {
+        display: block;
+        border-radius: 8px; /* 和图片的圆角对齐，聚焦描边才不会露方角 */
+      }
+
+      /* 可点击的东西得给点反馈，不然鼠标移上去毫无提示、看不出能点 */
+      .card .card-link:hover .card-thumb {
+        filter: brightness(0.88);
+      }
+
+      /* 键盘 Tab 聚焦时画一圈可见的轮廓：
+         默认轮廓跟着方框走、在圆角上不好看，这里自己画一个 */
+      .card .card-link:focus-visible {
+        outline: 3px solid #2f303b;
+        outline-offset: 2px;
+      }
+
+      /* 右侧的箭头：渐变底，鼠标悬浮时浮出“更多”两个字。
+         这里用的是 <a> 而不是 <button>——它的本职是「跳转到某个页面」，
+         用链接更符合语义：中键点击、右键“在新标签页打开”这些浏览器自带能力都能用，
+         换成按钮加 JS 跳转反而会丢掉这些。 */
+      .more-btn {
+        position: relative; /* 给里面绝对定位的箭头和文字当参照 */
+        flex: none; /* 不参与伸缩，宽度就用下面写死的值 */
+        width: 56px;
+        padding: 0;
+        border: none;
+        border-radius: 12px;
+        /* 160° 是斜向渐变的常用角度，比纯色多一层体积感；
+           配色为灰白：左上接近纯白、右下过渡到浅灰。
+           起点没用绝对的 #fff，因为页面底色就是白的，
+           纯白那一头会和背景糊在一起、看不出按钮的边界。 */
+        background-image: linear-gradient(160deg, #f7f8fa, #c2c9d4);
+        cursor: pointer;
+        text-decoration: none; /* <a> 默认带下划线，去掉它 */
+        transition:
+          filter 0.25s,
+          transform 0.25s,
+          box-shadow 0.25s;
+      }
+
+      /* 鼠标悬浮（或键盘 Tab 聚焦）时：整体加深、向右挪一点、浮起阴影 */
+      .more-btn:hover,
+      .more-btn:focus-visible {
+        /* 原来是「提亮 + 提高饱和度」，那是配米黄底用的：
+           换成灰白底后，灰色没有饱和度可提（saturate 不起作用），
+           而且底色已经很亮，再提亮会往白色冲、反而和白色背景糊成一片。
+           所以改成略微压深——按钮变得更「实」，
+           和卡片图片悬浮时的压深（brightness 0.88）也是同一套语言。 */
+        filter: brightness(0.94);
+        transform: translateX(4px);
+        box-shadow: 0 8px 20px rgba(47, 48, 59, 0.25);
+        outline: none;
+      }
+
+      /* 箭头本体：只画上、右两条边框就得到一个“⌐”，转 45° 后指向右侧 */
+      .more-btn .more-btn-arrow {
+        --arrow-rotate: 45deg; /* 抽成变量，以后想换方向只改这一处 */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 12px;
+        height: 12px;
+        border-top: 3px solid #16171d;
+        border-right: 3px solid #16171d;
+        /* 想把百分比位移算准，就得连上旋转一起写；
+           这里顺序是「先转、后挪」，所以下面 hover 的位移是朝着屏幕右侧的 */
+        transform: translate(-50%, -50%) rotate(var(--arrow-rotate));
+        transition: transform 0.25s;
+      }
+
+      /* 悬浮时箭头再往右挪 4px，暗示“还能往后翻” */
+      .more-btn:hover .more-btn-arrow,
+      .more-btn:focus-visible .more-btn-arrow {
+        transform: translate(-50%, -50%) translateX(4px)
+          rotate(var(--arrow-rotate));
+      }
+
+      /* “更多”两个字：默认完全透明，悬浮时才浮现 */
+      .more-btn .more-btn-text {
+        position: absolute;
+        /* 紧挨在箭头（垂直居中、12px 见方）的下方，
+           而不是贴到按钮最底部——那样字和箭头离太远，不像一组 */
+        top: calc(50% + 20px);
+        left: 0;
+        width: 100%; /* 用整条宽度 + text-align 来水平居中 */
+        color: #16171d;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
+        white-space: nowrap; /* 别折成两行 */
+        opacity: 0;
+        transition: opacity 0.25s;
+        pointer-events: none; /* 它只是装饰，别拦截鼠标事件 */
+      }
+
+      .more-btn:hover .more-btn-text,
+      .more-btn:focus-visible .more-btn-text {
+        opacity: 1;
+      }
+
+      /* ===== 页脚 ===== */
+      .site-footer {
+        /* 沿用导航栏的深色底：页面首尾同一个颜色，整页看起来是「框」起来的，
+           不会像随便贴在白纸底部的一行小字 */
+        background-color: #2f303b;
+        color: rgba(
+          240,
+          245,
+          185,
+          0.7
+        ); /* 米黄，但压暗到比导航链接更淡，不跟正文抢注意力 */
+        text-align: center;
+        /* 上下留白比左右多：单行文字在竖向上太挤会显得局促 */
+        padding: 28px 20px;
+        font-size: 14px;
+        letter-spacing: 0.04em; /* 和首页标题一样稍微拉开字距，观感更整齐 */
+        user-select: none; /* 页脚只是版权信息，拖动页面时别被顺手选中 */
       }
 
       /* ===== 手机端适配（屏幕宽度小于 900px 时生效） =====
@@ -189,6 +524,33 @@
           text-align: center;
           border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        /* 手机屏幕横向塞 4 格会挤成小方块，改成 2×2 更好读 */
+        .card-list {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* 箭头跟着瘦一点，别抢走格子太多宽度 */
+        .more-btn {
+          width: 44px;
+        }
+
+        /* 手机端没有鼠标指针，也就永远等不到 hover，文字会一直藏着看不见，
+           所以这里反过来：直接让它常显，不再靠悬浮触发 */
+        .more-btn .more-btn-text {
+          opacity: 1;
+        }
+
+        /* 文字常显以后，整组就是「箭头 + 更多」的固定两行，
+           而原来那套坐标是按「文字只是短暂浮现」设计的，位置偏下、看着不居中。
+           这里把两行一起上提 15px，使整组（12px 箭头 + 14px 间距 + 约 16px 文字 ≈ 42px）
+           的垂直中点重新落回按钮中线 */
+        .more-btn .more-btn-arrow {
+          top: calc(50% - 15px);
+        }
+        .more-btn .more-btn-text {
+          top: calc(50% + 5px);
+        }
       }
     </style>
   </head>
@@ -218,29 +580,236 @@
     <!-- 页面内容 -->
     <main>
       <section id="home">
-        <h1>首页</h1>
-        <p>这里是首页内容。</p>
+        <!-- 首页顶部的标题，居中显示 -->
+        <h1 class="home-title">Welcome To D9游研！！！</h1>
+        <!-- 首页用整张欢迎图横向铺满，取代原来的标题和文字介绍 -->
+        <img class="home-banner" src="welcome_home.png" alt="D9游研社欢迎页" />
       </section>
 
       <section id="about">
         <h1>社团简介</h1>
-        <p>
-          D9游研社社团简介！！
-          D9是一个游戏开发社团，主要活动为游戏开发相关知识分享，gamejam组队与业余小游戏制作！<br /><br />
-          我们欢迎所有0基础的同学来与我们一同学习或玩耍，我们会不定期组团参加展会，与外校社团共同活动（待定）并且提供给新人一个小比赛去熟悉游戏开发流程！
-          另外，本社团为兴趣社团，没有任何硬性指标或者要求；欢迎所有感兴趣的同学加入我们！
-        </p>
+        <section class="club-intro">
+          <h2>D9游研社简介</h2>
+
+          <p>
+            D9游研社是一个以游戏开发为核心的兴趣社团，致力于为所有对游戏创作感兴趣的同学提供学习、交流与实践平台。
+            社团围绕游戏开发知识分享、Game Jam
+            组队协作以及业余小游戏制作等方向开展活动，帮助成员了解游戏开发流程、
+            积累项目经验，并在合作中感受游戏创作的乐趣。
+          </p>
+
+          <h3>社团主要活动</h3>
+          <ul>
+            <li>
+              <strong>游戏开发知识分享：</strong>
+              组织策划、程序、美术、音频、测试及项目管理等方向的分享与交流，兼顾零基础入门与进阶经验，
+              帮助成员逐步建立对游戏开发的整体认知。
+            </li>
+            <li>
+              <strong>Game Jam 组队与参与：</strong>
+              为参与各类 Game Jam
+              或社团内部创作活动提供组队与交流机会，促进不同专长、不同年级成员之间的协作，
+              在限定时间内完成可玩的游戏原型。
+            </li>
+            <li>
+              <strong>业余小游戏制作：</strong>
+              鼓励成员自由组队，将创意落地为小型游戏作品，在实践中提升开发能力、协作能力与作品完成度。
+            </li>
+            <li>
+              <strong>新人实践比赛：</strong>
+              面向新成员组织小型比赛或实践项目，帮助大家熟悉从创意提出、分工协作到开发完成的游戏开发基本流程。
+            </li>
+            <li>
+              <strong>展会与校际交流：</strong>
+              不定期组织成员参观展会、参与交流活动，并视实际情况与外校社团开展联合活动（具体安排待定），
+              拓展视野，促进校际交流。
+            </li>
+          </ul>
+
+          <p>
+            D9游研社面向全体同学开放，尤其欢迎零基础但感兴趣的同学加入。本社团为兴趣社团，不设硬性指标或强制要求，
+            成员可根据自身兴趣与时间自由参与。
+          </p>
+          <p>
+            无论你是想学习游戏开发、寻找组队伙伴，还是单纯想体验游戏创作的乐趣，
+            D9游研社都期待你的加入。
+          </p>
+
+          <p><strong>让我们一起学习、交流、做游戏。</strong></p>
+        </section>
       </section>
 
       <section id="services">
         <h1>近期活动</h1>
-        <p>这里是近期活动</p>
+
+        <!-- 横向 4 个活动位 + 右侧的“更多”箭头（与「游戏作品展示」共用 .card-* 样式） -->
+        <div class="card-row">
+          <ul class="card-list">
+            <li class="card">
+              <h3 class="card-title">活动1</h3>
+              <!-- 以后要换跳转地址，改各个 href 就行 -->
+              <a
+                class="card-link"
+                href="https://www.baidu.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  class="card-thumb"
+                  src="event_1.png"
+                  alt="活动1 的活动照片"
+                />
+              </a>
+            </li>
+            <li class="card">
+              <h3 class="card-title">活动2</h3>
+              <a
+                class="card-link"
+                href="https://www.baidu.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  class="card-thumb"
+                  src="event_2.png"
+                  alt="活动2 的活动照片"
+                />
+              </a>
+            </li>
+            <li class="card">
+              <h3 class="card-title">活动3</h3>
+              <a
+                class="card-link"
+                href="https://www.baidu.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  class="card-thumb"
+                  src="event_3.png"
+                  alt="活动3 的活动照片"
+                />
+              </a>
+            </li>
+            <li class="card">
+              <h3 class="card-title">活动4</h3>
+              <a
+                class="card-link"
+                href="https://www.baidu.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  class="card-thumb"
+                  src="event_4.png"
+                  alt="活动4 的活动照片"
+                />
+              </a>
+            </li>
+          </ul>
+
+          <!-- “更多”：箭头默认显示，鼠标悬浮（或键盘聚焦）时浮出“更多” -->
+          <a
+            class="more-btn"
+            href="https://www.baidu.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="查看更多活动"
+          >
+            <!-- 箭头是纯装饰，用 CSS 画出来的，读屏软件可以跳过 -->
+            <span class="more-btn-arrow" aria-hidden="true"></span>
+            <span class="more-btn-text">更多</span>
+          </a>
+        </div>
       </section>
+
       <section id="games">
         <h1>游戏作品展示</h1>
-        <p>游戏作品展示</p>
+
+        <!-- 仿照「近期活动」：横向 4 个作品位 + 右侧的“更多”箭头 -->
+        <div class="card-row">
+          <ul class="card-list">
+            <li class="card">
+              <h3 class="card-title">作品1</h3>
+              <!-- 以后要换跳转地址，改各个 href 就行 -->
+              <a
+                class="card-link"
+                href="https://www.baidu.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  class="card-thumb"
+                  src="game_piece_1.png"
+                  alt="作品1 的游戏截图"
+                />
+              </a>
+            </li>
+            <li class="card">
+              <h3 class="card-title">作品2</h3>
+              <a
+                class="card-link"
+                href="https://www.baidu.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  class="card-thumb"
+                  src="game_piece_2.png"
+                  alt="作品2 的游戏截图"
+                />
+              </a>
+            </li>
+            <li class="card">
+              <h3 class="card-title">作品3</h3>
+              <a
+                class="card-link"
+                href="https://www.baidu.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  class="card-thumb"
+                  src="game_piece_3.png"
+                  alt="作品3 的游戏截图"
+                />
+              </a>
+            </li>
+            <li class="card">
+              <h3 class="card-title">作品4</h3>
+              <a
+                class="card-link"
+                href="https://www.baidu.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  class="card-thumb"
+                  src="game_piece_4.png"
+                  alt="作品4 的游戏截图"
+                />
+              </a>
+            </li>
+          </ul>
+
+          <a
+            class="more-btn"
+            href="https://www.baidu.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="查看更多游戏作品"
+          >
+            <span class="more-btn-arrow" aria-hidden="true"></span>
+            <span class="more-btn-text">更多</span>
+          </a>
+        </div>
       </section>
     </main>
+
+    <!-- 页脚：目前只放版权信息，以后再想加联系方式 / 友链，往这个 footer 里继续塞就行 -->
+    <footer class="site-footer">
+      <p>© 2026 D9游研社</p>
+    </footer>
 
     <script>
       const topNav = document.querySelector(".top-nav");
