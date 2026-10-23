@@ -1,0 +1,7 @@
+{
+  "name": "d9-game-development-club",
+  "version": "1.0.0",
+  "private": true,
+  "description": "D9 游研社官方网站首版",
+  "scripts": {"dev": "node server.mjs", "check": "node --check dist/app.js && node --check dist/content.js"}
+}
