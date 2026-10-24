@@ -2,6 +2,19 @@
 
 浅色、简洁的游戏开发社团网站。不展示学校信息。
 
+## GitHub 仓库与网站入口
+
+默认仓库：[Olive1232/D9GameClub](https://github.com/Olive1232/D9GameClub)。原 Gitee 仓库保留为备用远程地址 `gitee`，GitHub 使用 `origin`。
+
+```sh
+git push origin main  # 更新 GitHub
+git push gitee main   # 如需同步，再更新 Gitee
+```
+
+仓库原有的 GitHub Pages 已启用。根目录 `index.html` 将访问转入 `dist/`，`.nojekyll` 用于直接提供静态文件。源码中的相对资源路径支持 GitHub Pages 项目子路径，无需修改。
+
+更新时合并了本地与 GitHub 原有提交历史。原 GitHub 版本另保留在 `backup/before-d9-web-update-4ef69ca` 分支；旧版图片也保留在仓库根目录。
+
 ## 本地运行
 
 无需安装依赖。使用 Node.js 运行：
@@ -31,7 +44,7 @@ npm run dev
 - `dist/styles.css`：颜色、排版与响应式布局。
 - `dist/assets/`：线上使用的插图、原型封面与图标。
 - `artwork/game-world-original.png`：首页插图原始文件；线上使用约 440 KB 的 JPEG。
-- `.openai/hosting.json`：Sites 标识与静态发布目录，后续更新沿用同一站点。
+- `.openai/hosting.json`：此前 Sites 预览的历史配置，GitHub Pages 不使用此文件。
 
 所有路由采用 `#/…`，静态托管无需配置服务端路由回退。`dist/` 可直接部署。
 
