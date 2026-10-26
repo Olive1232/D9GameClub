@@ -3,7 +3,20 @@ window.D9 = {
     {id:'taptap-2026',name:'2026TapTap聚光灯',en:'TAPTAP SPOTLIGHT / 2026',icon:'✦',color:'mint'},
     {id:'welcome-gamejam-2026',name:'2026社团迎新GameJam',en:'WELCOME GAME JAM / 2026',icon:'✳',color:'peach'}
   ],
-  works: [],
+  works: [
+    {
+      id:'red-cave',
+      title:'红溶洞',
+      category:'taptap-2026',
+      genre:'3D 模拟游戏',
+      image:'red-cave-cover.webp',
+      imageWidth:1080,
+      imageHeight:608,
+      description:'进入神秘的地下洞穴，开始你与 的奇怪冒险吧。在各个岩洞之间穿梭，收集这里为数不多的生物，并将它们喂给 ，最终揭开 的面纱....',
+      screenshots:[{image:'red-cave-gameplay-01.webp',width:1656,height:932,alt:'《红溶洞》游戏实机：地下岩洞与可收集的生物'}],
+      downloadUrl:'https://pan.quark.cn/s/e49c694e5bf9'
+    }
+  ],
   departments: [
     {id:'admin',number:'01',icon:'▦',name:'行政部',en:'ADMINISTRATION',description:'行政事务与学校对接',tasks:['负责社团行政事务与相关协调工作','与学校相关部门对接，沟通社团工作安排','向宣策部下发活动安排及相关要求'],fit:'愿意沟通协调，关注行政流程与事务落实',color:'mint'},
     {id:'publicity',number:'02',icon:'✳',name:'宣策部',en:'EVENTS & PUBLICITY',description:'活动承办与宣传招新',tasks:['承接、承办行政部下发的活动','策划并开展 Game Jam、线下团建等活动','协调活动场地与设备的租借及现场事务','负责社团宣传、招新与相关内容制作'],fit:'喜欢活动策划、组织执行、宣传或招新工作',color:'peach'},

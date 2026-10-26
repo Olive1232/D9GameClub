@@ -2,8 +2,6 @@
   'use strict';
   const {works, workCategories, tutorials, tutorialAliases, departments} = window.D9;
   const main = document.querySelector('main');
-  const dialog = document.querySelector('#detail-dialog');
-  const dialogContent = document.querySelector('#dialog-content');
   const readIds = new Set();
   let currentWorkCategory = 'all';
   let toastTimer;
@@ -23,7 +21,7 @@
   const button = (href,label) => `<a class="button" href="${href}">${label}${arrow}</a>`;
   const pageHead = title => `<header class="page-heading container"><h1>${title}</h1></header>`;
   const workItems = categoryId => works.filter(w => categoryId === 'all' || w.category === categoryId);
-  const workCard = w => `<article class="work-card"><button class="work-visual" data-work="${w.id}" aria-label="阅读作品：${w.title}">${w.image?`<img src="assets/${w.image}" alt="${w.title}" loading="lazy">`:'<span aria-hidden="true">✦</span>'}</button><h2>${w.title}</h2><p>${workCategories.find(c=>c.id===w.category)?.name||''}</p></article>`;
+  const workCard = w => `<article class="work-card"><a class="work-card-link" href="#/work/${w.id}" aria-label="查看游戏：${w.title}"><div class="work-visual">${w.image?`<img src="assets/${w.image}" alt="《${w.title}》封面" width="${w.imageWidth}" height="${w.imageHeight}" loading="lazy">`:'<span aria-hidden="true">✦</span>'}</div><div class="work-card-heading"><h2>${w.title}</h2>${arrow}</div><p>${workCategories.find(c=>c.id===w.category)?.name||''}</p></a></article>`;
   const workResults = categoryId => {
     const items = workItems(categoryId);
     return items.length ? `<div class="work-grid">${items.map(workCard).join('')}</div>` : '<div class="empty-state"><p>暂无作品</p></div>';
@@ -47,8 +45,15 @@
   const worksPage = categoryId => {
     currentWorkCategory = workCategories.some(c=>c.id===categoryId) ? categoryId : 'all';
     const count = workItems(currentWorkCategory).length;
-    return `${pageHead('作品展示')}<section class="page-content container"><div class="filter-bar"><div class="filter-buttons">${[{id:'all',name:'全部'},...workCategories].map(c=>`<button class="filter ${c.id===currentWorkCategory?'active':''}" data-work-filter="${c.id}" aria-pressed="${c.id===currentWorkCategory}">${c.name}</button>`).join('')}</div><span class="result-count" id="work-count" ${count?'':'hidden'}>${count} 篇</span></div><div id="work-results" aria-live="polite">${workResults(currentWorkCategory)}</div></section>`;
+    return `${pageHead('作品展示')}<section class="page-content container"><div class="filter-bar"><div class="filter-buttons">${[{id:'all',name:'全部'},...workCategories].map(c=>`<button class="filter ${c.id===currentWorkCategory?'active':''}" data-work-filter="${c.id}" aria-pressed="${c.id===currentWorkCategory}">${c.name}</button>`).join('')}</div><span class="result-count" id="work-count" ${count?'':'hidden'}>${count} 部作品</span></div><div id="work-results" aria-live="polite">${workResults(currentWorkCategory)}</div></section>`;
   };
+
+  function renderWork(id) {
+    const w = works.find(w=>w.id===id);
+    if (!w) return notFound();
+    const category = workCategories.find(c=>c.id===w.category);
+    return `<article class="work-detail container"><header class="work-heading"><a class="back-link" href="#/works/${w.category}">← ${category?.name||'作品展示'}</a><div class="work-title-row"><div><h1>${w.title}</h1><p class="work-type">${w.genre}</p></div><a class="button" href="${w.downloadUrl}" target="_blank" rel="noopener noreferrer" aria-label="获取《${w.title}》（夸克网盘，新窗口打开）">获取游戏${arrow}</a></div></header><img class="work-cover" src="assets/${w.image}" alt="《${w.title}》封面" width="${w.imageWidth}" height="${w.imageHeight}" fetchpriority="high"><section class="work-description" aria-labelledby="work-intro"><h2 id="work-intro">游戏简介</h2><p>${w.description}</p></section><div class="work-screenshots">${w.screenshots.map(s=>`<figure><img src="assets/${s.image}" alt="${s.alt}" width="${s.width}" height="${s.height}" loading="lazy"><figcaption>游戏实机画面</figcaption></figure>`).join('')}</div></article>`;
+  }
 
   const activities = () => `${pageHead('最近活动')}<section class="page-content container"><div class="filter-bar"><div class="filter-buttons"><button class="filter active" data-event-filter="upcoming" aria-pressed="true">近期</button><button class="filter" data-event-filter="past" aria-pressed="false">往期</button></div></div><div id="event-results" aria-live="polite">${eventResults(false)}</div></section>`;
 
@@ -66,17 +71,17 @@
   const notFound = () => `<section class="not-found container"><h1>404</h1><p>页面未找到</p>${button('#/home','返回首页')}</section>`;
 
   function render() {
-    if (dialog.open) dialog.close();
     const parts=(location.hash.slice(1)||'/home').split('/').filter(Boolean);
     const route=parts[0]||'home';
     if (route==='join') {location.replace('#/home');return;}
     if (route==='tutorial' && tutorialAliases[parts[1]]) {location.replace(`#/tutorial/${tutorialAliases[parts[1]]}`);return;}
-    const pages={home,about,activities,works:()=>worksPage(parts[1]),tutorials:tutorialPage,departments:departmentPage,tutorial:()=>renderArticle(parts[1])};
+    const pages={home,about,activities,works:()=>worksPage(parts[1]),work:()=>renderWork(parts[1]),tutorials:tutorialPage,departments:departmentPage,tutorial:()=>renderArticle(parts[1])};
     main.innerHTML=(pages[route]||notFound)();
     const names={home:'把想法做成游戏',about:'社团简介',activities:'最近活动',works:'作品展示',tutorials:'开发教程',departments:'部门分工'};
-    document.title=`${route==='tutorial'?(tutorials.find(t=>t.id===parts[1])?.title||'页面未找到'):(names[route]||'页面未找到')} · D9 游研社`;
+    const pageTitle=route==='tutorial'?tutorials.find(t=>t.id===parts[1])?.title:route==='work'?works.find(w=>w.id===parts[1])?.title:names[route];
+    document.title=`${pageTitle||'页面未找到'} · D9 游研社`;
     document.querySelectorAll('[data-nav]').forEach(a=>{
-      const active=a.dataset.nav===(route==='tutorial'?'tutorials':route);
+      const active=a.dataset.nav===(route==='tutorial'?'tutorials':route==='work'?'works':route);
       a.classList.toggle('active',active);
       if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
     });
@@ -105,20 +110,13 @@
     const node=document.querySelector('.toast');node.textContent=message;node.classList.add('visible');
     clearTimeout(toastTimer);toastTimer=setTimeout(()=>node.classList.remove('visible'),2000);
   }
-  function openDialog(html) {dialogContent.innerHTML=html;dialog.showModal();document.body.style.overflow='hidden';}
-  document.querySelector('.dialog-close').addEventListener('click',()=>dialog.close());
-  dialog.addEventListener('close',()=>{document.body.style.overflow='';});
-  dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
-
   document.addEventListener('click',e=>{
-    const work=e.target.closest('[data-work]');
-    if(work){const item=works.find(w=>w.id===work.dataset.work);if(item)openDialog(`<article class="dialog-inner"><h2 id="dialog-title">${item.title}</h2>${item.body||''}</article>`);return;}
     const wf=e.target.closest('[data-work-filter]');
     if(wf){
       currentWorkCategory=wf.dataset.workFilter;
       document.querySelector('#work-results').innerHTML=workResults(currentWorkCategory);
       const count=workItems(currentWorkCategory).length;
-      const countNode=document.querySelector('#work-count');countNode.textContent=`${count} 篇`;countNode.hidden=!count;
+      const countNode=document.querySelector('#work-count');countNode.textContent=`${count} 部作品`;countNode.hidden=!count;
       document.querySelectorAll('[data-work-filter]').forEach(b=>{b.classList.toggle('active',b===wf);b.setAttribute('aria-pressed',b===wf);});
       history.replaceState(null,'',currentWorkCategory==='all'?'#/works':`#/works/${currentWorkCategory}`);return;
     }
