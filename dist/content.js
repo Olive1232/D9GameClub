@@ -5,9 +5,9 @@ window.D9 = {
   ],
   works: [],
   departments: [
-    {id:'admin',number:'01',icon:'▦',name:'行政部',en:'ADMINISTRATION',description:'做好行政事务，连接社团与学校。',tasks:['负责社团行政事务与相关协调工作','与学校相关部门对接，沟通社团工作安排','向宣策部下发活动安排及相关要求'],fit:'愿意沟通协调，关注行政流程与事务落实',color:'mint'},
-    {id:'publicity',number:'02',icon:'✳',name:'宣策部',en:'EVENTS & PUBLICITY',description:'让活动落地，让社团被更多人看见。',tasks:['承接、承办行政部下发的活动','策划并开展 Game Jam、线下团建等活动','协调活动场地与设备的租借及现场事务','负责社团宣传、招新与相关内容制作'],fit:'喜欢活动策划、组织执行、宣传或招新工作',color:'peach'},
-    {id:'gamedev',number:'03',icon:'⌘',name:'游研部',en:'GAME DEVELOPMENT',description:'聚集希望专注游戏开发的伙伴，一起学习与创作。',tasks:['为对游戏开发感兴趣的同学提供交流与创作空间','围绕策划、程序、美术、音乐等方向共同学习与实践','承接其他部门的技术需求，提供相应支持','编写游戏开发教程，整理经验与学习资料'],fit:'想专注游戏开发，或愿意参与社团技术支持',color:'lavender'}
+    {id:'admin',number:'01',icon:'▦',name:'行政部',en:'ADMINISTRATION',description:'行政事务与学校对接',tasks:['负责社团行政事务与相关协调工作','与学校相关部门对接，沟通社团工作安排','向宣策部下发活动安排及相关要求'],fit:'愿意沟通协调，关注行政流程与事务落实',color:'mint'},
+    {id:'publicity',number:'02',icon:'✳',name:'宣策部',en:'EVENTS & PUBLICITY',description:'活动承办与宣传招新',tasks:['承接、承办行政部下发的活动','策划并开展 Game Jam、线下团建等活动','协调活动场地与设备的租借及现场事务','负责社团宣传、招新与相关内容制作'],fit:'喜欢活动策划、组织执行、宣传或招新工作',color:'peach'},
+    {id:'gamedev',number:'03',icon:'⌘',name:'游研部',en:'GAME DEVELOPMENT',description:'游戏开发与技术支持',tasks:['为对游戏开发感兴趣的同学提供交流与创作空间','围绕策划、程序、美术、音乐等方向共同学习与实践','承接其他部门的技术需求，提供相应支持','编写游戏开发教程，整理经验与学习资料'],fit:'想专注游戏开发，或愿意参与社团技术支持',color:'lavender'}
   ],
   tutorialAliases: {
     'first-prototype':'game-development-basics',
@@ -18,7 +18,7 @@ window.D9 = {
     'team-workflow':'game-development-basics'
   },
   tutorials: [
-    {id:'game-development-basics',title:'游戏开发入门：做出第一个可玩版本',category:'开发入门',level:'零基础友好',minutes:7,number:'01',summary:'把原型、游戏循环、移动收集、操作反馈、视觉与团队协作串起来，用一次小练习走完开发流程。',keywords:['原型','游戏循环','移动','碰撞','收集','反馈','手感','美术','视觉','协作','版本管理','Git','试玩','程序','策划','入门'],body:`
+    {id:'game-development-basics',title:'游戏开发入门：做出第一个可玩版本',shortTitle:'开发入门',category:'开发入门',level:'零基础友好',minutes:7,number:'01',summary:'从想法到第一个可玩版本。',keywords:['原型','游戏循环','移动','碰撞','收集','反馈','手感','美术','视觉','协作','版本管理','Git','试玩','程序','策划','入门'],body:`
       <p class="article-lead">用一个能移动、能收集、能重新开始的小游戏，走完第一次开发。先把想法做小，再把输入、规则、画面与反馈接起来。</p>
       <h2>01 / 把点子缩成一个可验证的目标</h2>
       <p>用一句话写清“玩家怎样操作，完成什么目标”。例如：用方向键移动角色，收集五枚金币后过关。第一版只保留一种主要操作和一个胜利条件，先用纸笔或几何方块验证规则。</p>
@@ -36,15 +36,15 @@ window.D9 = {
       <h2>交付前，检查这五件事</h2>
       <ul><li>玩家能理解操作方式和目标。</li><li>移动、收集与计分按规则工作。</li><li>完成提示清楚，重开后状态正确重置。</li><li>角色、目标与背景容易区分。</li><li>有一个别人实际运行过、并根据反馈改进的版本。</li></ul>
       <p>想先了解项目里的职位、软件和交付物，可以阅读<a href="#/tutorial/game-project-overview">「游戏开发通识：职位分工与软件工具」</a>。</p>`},
-    {id:'game-project-overview',title:'游戏开发通识：职位分工与软件工具',category:'开发通识',level:'零基础全景导读',minutes:16,number:'02',summary:'用一个「收集金币」小游戏，认识策划、程序、美术等职位，理解游戏引擎、Blender、Git 等工具怎样协作。',keywords:['职位','岗位','分工','软件','工具','引擎','项目','Godot','Unity','Unreal','UE','GDScript','VS Code','Visual Studio','Krita','Aseprite','Blender','Figma','Audacity','REAPER','FMOD','Git','GitHub','Gitee','Trello','Notion','Excel','Google Sheets','策划','程序','美术','动画','UI','UX','音频','测试','QA','技术美术','TA','制作人','运营','发行'],body:`
+    {id:'game-project-overview',title:'游戏开发通识：职位分工与软件工具',shortTitle:'开发通识',category:'开发通识',level:'零基础全景导读',minutes:16,number:'02',summary:'认识项目分工与常用工具。',keywords:['职位','岗位','分工','软件','工具','引擎','项目','Godot','Unity','Unreal','UE','GDScript','VS Code','Visual Studio','Krita','Aseprite','Blender','Figma','Audacity','REAPER','FMOD','Git','GitHub','Gitee','Trello','Notion','Excel','Google Sheets','策划','程序','美术','动画','UI','UX','音频','测试','QA','技术美术','TA','制作人','运营','发行'],body:`
       <p class="article-lead">第一次接触游戏开发，很容易被「策划、程序、技术美术、引擎、Git」这些词绕晕。我们用一个“角色在小岛上收集五枚金币”的小游戏，看看一个项目里有哪些工作、各类软件分别帮什么忙，以及它们怎样一起产出一个能玩的版本。</p>
 
       <h2>01 / 先把项目看成：人、工具和交付物</h2>
       <p>一个游戏项目，是一群人利用工具完成一系列工作，并把结果接起来的过程。理解它时，可以先问三个问题：</p>
       <div class="article-concept-grid" aria-label="理解游戏项目的三个角度">
-        <section><span>PEOPLE</span><h3>谁负责这件事？</h3><p>谁设计规则，谁实现交互，谁验证结果？这是分工。</p></section>
-        <section><span>TOOLS</span><h3>用什么来完成？</h3><p>用引擎、画图软件、音频编辑器或任务表来推进工作。</p></section>
-        <section><span>DELIVERABLES</span><h3>交给别人什么？</h3><p>一张图片、一段脚本、一份规则说明，或一个试玩版本。</p></section>
+        <section><h3>谁负责这件事？</h3><p>谁设计规则，谁实现交互，谁验证结果？这是分工。</p></section>
+        <section><h3>用什么来完成？</h3><p>用引擎、画图软件、音频编辑器或任务表来推进工作。</p></section>
+        <section><h3>交给别人什么？</h3><p>一张图片、一段脚本、一份规则说明，或一个试玩版本。</p></section>
       </div>
       <p>例如，“做金币”至少包含三个不同结果：策划说明金币如何计分，美术交付金币图片，程序让金币在碰到角色后消失并加分。只有图片时，金币还只是素材；接入规则和反馈后，它才成为游戏中的可交互对象。</p>
 
