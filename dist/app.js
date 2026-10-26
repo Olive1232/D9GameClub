@@ -53,7 +53,7 @@
   function notFound(){return '<section class="not-found container"><h1>404</h1><p>这个世界的入口还没有出现。</p>'+button('#/home','回到首页')+'</section>';}
   function updateTutorials(){
     const q=searchTerm.trim().toLowerCase();
-    const items=tutorials.filter(t=>(currentCategory==='全部'||t.category===currentCategory)&&`${t.title} ${t.summary} ${t.category}`.toLowerCase().includes(q));
+    const items=tutorials.filter(t=>(currentCategory==='全部'||t.category===currentCategory)&&`${t.title} ${t.summary} ${t.category} ${(t.keywords||[]).join(' ')}`.toLowerCase().includes(q));
     const results=document.querySelector('#tutorial-results');if(!results)return;
     results.innerHTML=items.length?items.map(tutorialCard).join(''):'<div class="empty-result"><h2>还没找到这方面的教程</h2><p>换一个关键词，或看看全部入门教程。</p><button class="button secondary small" id="reset-search">查看全部教程 ↗</button></div>';
     document.querySelector('#tutorial-count').textContent=`${items.length} 篇教程 · 已读 ${readIds.size} / ${tutorials.length} 篇`;
