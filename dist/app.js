@@ -2,6 +2,7 @@
   'use strict';
   const {works, workCategories, tutorials, tutorialAliases, departments} = window.D9;
   const main = document.querySelector('main');
+  const friendLinks = document.querySelector('.friend-links');
   const readIds = new Set();
   let currentWorkCategory = 'all';
   let toastTimer;
@@ -86,6 +87,7 @@
       if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
     });
     closeMenu();
+    friendLinks.open=false;
     window.scrollTo({top:0,behavior:'instant'});
     main.focus({preventScroll:true});
   }
@@ -96,12 +98,15 @@
     b.setAttribute('aria-expanded','false');b.setAttribute('aria-label','展开导航');
   }
   document.querySelector('.menu-toggle').addEventListener('click',()=>{
+    friendLinks.open=false;
     const b=document.querySelector('.menu-toggle');
     const open=b.getAttribute('aria-expanded')!=='true';
     b.setAttribute('aria-expanded',open);b.setAttribute('aria-label',open?'收起导航':'展开导航');
     document.querySelector('#main-nav').classList.toggle('open',open);
   });
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
+  friendLinks.addEventListener('toggle',()=>{if(friendLinks.open)closeMenu();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMenu();if(friendLinks.open){friendLinks.open=false;friendLinks.querySelector('summary').focus();}}});
+  document.addEventListener('focusin',e=>{if(!friendLinks.contains(e.target))friendLinks.open=false;});
   document.querySelector('.skip-link').addEventListener('click',e=>{e.preventDefault();main.focus();main.scrollIntoView();});
   document.querySelector('#year').textContent=new Date().getFullYear();
   window.addEventListener('hashchange',render);
@@ -111,6 +116,7 @@
     clearTimeout(toastTimer);toastTimer=setTimeout(()=>node.classList.remove('visible'),2000);
   }
   document.addEventListener('click',e=>{
+    if(!friendLinks.contains(e.target))friendLinks.open=false;
     const wf=e.target.closest('[data-work-filter]');
     if(wf){
       currentWorkCategory=wf.dataset.workFilter;

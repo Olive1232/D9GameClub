@@ -16,10 +16,19 @@
   <header class="site-header">
     <div class="header-inner">
       <a href="#/home" class="brand" aria-label="D9 游研社首页"><span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="brand-name">D9<span>游研社</span></span></a>
-      <button class="menu-toggle" aria-label="展开导航" aria-expanded="false" aria-controls="main-nav"><span></span><span></span></button>
       <nav id="main-nav" aria-label="主导航">
         <a href="#/home" data-nav="home">首页</a><a href="#/about" data-nav="about">社团简介</a><a href="#/activities" data-nav="activities">最近活动</a><a href="#/works" data-nav="works">作品展示</a><a href="#/tutorials" data-nav="tutorials">开发教程</a><a href="#/departments" data-nav="departments">部门分工</a>
       </nav>
+      <details class="friend-links">
+        <summary aria-controls="friend-links-panel">友情链接<span class="friend-chevron" aria-hidden="true"></span></summary>
+        <div class="friend-links-panel" id="friend-links-panel">
+          <a class="friend-link" href="https://zjutdev.games/" target="_blank" rel="noopener noreferrer" aria-label="访问 ZJUT 创游工坊（新窗口打开）" aria-describedby="friend-site-intro">
+            <div class="friend-link-heading"><strong>ZJUT 创游工坊</strong><span aria-hidden="true">↗</span></div>
+            <p id="friend-site-intro">游戏开发与创作者社群，分享作品、知识与 Game Jam 活动。</p>
+          </a>
+        </div>
+      </details>
+      <button class="menu-toggle" aria-label="展开导航" aria-expanded="false" aria-controls="main-nav"><span></span><span></span></button>
     </div>
   </header>
   <main id="main" tabindex="-1"></main>
