@@ -2,18 +2,39 @@
 
 浅色、简洁的游戏开发社团网站。不展示学校名称。
 
+## 文件放在哪里
+
+```text
+d9-club/
+├── dist/                    网站正在使用的文件，直接编辑和发布
+│   └── assets/              网页使用的图片、图标
+├── artwork/                 原始素材
+│   ├── home/               首页插图原文件
+│   └── red-cave/           《红溶洞》的主图、实机原图
+├── archive/                 旧版未使用的文件
+│   └── legacy-site/        旧首页图、旧图标
+├── index.html               GitHub Pages 网站入口
+├── package.json             项目命令
+└── server.mjs               本地预览服务
+```
+
+修改网站内容主要看 `dist/content.js`；修改页面结构看 `dist/app.js`；修改外观看 `dist/styles.css`。`dist/` 同时是网站源码和发布目录。
+
+根目录的 `index.html`、隐藏文件 `.nojekyll` 和 `.git/` 分别用于网站入口、GitHub Pages 和版本记录，需要保留。
+
 ## GitHub 仓库与网站入口
 
-默认仓库：[Olive1232/D9GameClub](https://github.com/Olive1232/D9GameClub)。原 Gitee 仓库保留为备用远程地址 `gitee`，GitHub 使用 `origin`。
+默认仓库：[Olive1232/D9GameClub](https://github.com/Olive1232/D9GameClub)，远程地址名为 `origin`。
+
+网站：[D9 游研社](https://olive1232.github.io/D9GameClub/)。
 
 ```sh
 git push origin main  # 更新 GitHub
-git push gitee main   # 如需同步，再更新 Gitee
 ```
 
 仓库原有的 GitHub Pages 已启用。根目录 `index.html` 将访问转入 `dist/`，`.nojekyll` 用于直接提供静态文件。源码中的相对资源路径支持 GitHub Pages 项目子路径，无需修改。
 
-更新时合并了本地与 GitHub 原有提交历史。原 GitHub 版本另保留在 `backup/before-d9-web-update-4ef69ca` 分支；旧版图片也保留在仓库根目录。
+更新时合并了本地与 GitHub 原有提交历史。原 GitHub 版本另保留在 `backup/before-d9-web-update-4ef69ca` 分支；当前保留的旧版图片已归入 `archive/legacy-site/`。
 
 ## 本地运行
 
@@ -42,7 +63,9 @@ npm run dev
 - `dist/app.js`：页面结构、作品筛选与教程阅读等交互。
 - `dist/styles.css`：颜色、排版与响应式布局。
 - `dist/assets/`：线上使用的首页插图、图标与游戏图片。
-- `artwork/game-world-original.png`：首页插图原始文件；线上使用约 440 KB 的 JPEG。
+- `artwork/home/game-world-original.png`：首页插图原始文件；线上使用约 440 KB 的 JPEG。
+- `artwork/red-cave/`：《红溶洞》的两张原图，网站使用的副本在 `dist/assets/`。
+- `archive/legacy-site/`：旧首页图和旧图标，当前网站未引用。
 - `.openai/hosting.json`：此前 Sites 预览的历史配置，GitHub Pages 不使用此文件。
 
 所有路由采用 `#/…`，静态托管无需配置服务端路由回退。`dist/` 可直接部署。
@@ -51,11 +74,9 @@ npm run dev
 
 后续需补齐：正式 Logo、详细社团资料、真实活动时间与报名链接、社团作品与作者资料。当前界面已明确标识待补充内容。
 
-## 插图来源与生成提示
+## 素材来源
 
-首页插图使用内置 image_gen 工具生成，原始文件保存于 `artwork/game-world-original.png`，网页版本为 `dist/assets/game-world.jpg`。下列为最终生成提示；站点图标为代码绘制的 SVG。
-
-> Use case: stylized-concept. Asset type: hero illustration for D9, a friendly game development club website, clean modern light design. Create one beautiful high quality stylized 3D diorama, landscape 3:2 composition. A small imaginative game world under construction: a pale seafoam green floating island with rounded grass terraces, a winding cream path, a tiny warm orange explorer, a cream architectural arch gateway, a few rounded trees, scattered small geometric building blocks, a soft aquamarine water channel with waterfall and a simple floating platform. A tiny flag with no letters. Toy-like clay material, sophisticated game concept art, clean ambient occlusion, soft morning studio lighting, crisp detailed silhouettes, gentle shadows, pastel mint and forest green palette, small terracotta orange accents. Isometric camera slightly above, whole island fully visible and centered, atmospheric warm white or very pale mint background with plenty of breathing room. Landscape horizontal image, no words, no letters, no logos, no typography, no website UI, no watermark. Do not add hands, computers, photo props or people.
+原始图片与首页插图的生成提示见 [原始素材说明](artwork/README.md)。
 
 ## 验证记录
 
